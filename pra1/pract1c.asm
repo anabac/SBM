@@ -1,5 +1,6 @@
 ;**************************************************************************
 ; SBM 2015. ESTRUCTURA BÁSICA DE UN PROGRAMA EN ENSAMBLADOR
+; Autores: Alejandro Cabana Suárez y Carlos Isasa Martín
 ;**************************************************************************
 ; DEFINICION DEL SEGMENTO DE DATOS
 DATOS SEGMENT
@@ -36,9 +37,9 @@ MOV DS, CX
 MOV BX, 0210H ; CARGAMOS LOS DATOS DEL ENUNCIADO
 MOV DI, 1011H
 
-MOV AL, DS:[1234H] ; AL=50
-MOV AX, [BX] ; AX = 5500
-MOV [DI], AL ; [DI] = 00
+MOV AL, DS:[1234H] ; accede al offset 1234h del segmento de datos
+MOV AX, [BX] ; accede al offset 0210h del segmento de datos
+MOV [DI], AL ; escribe en el offset 1011h del segmento de datos
 
 ; FIN DEL PROGRAMA
 MOV AX, 4C00H

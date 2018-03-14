@@ -1,5 +1,6 @@
 ;**************************************************************************
 ; SBM 2015. ESTRUCTURA BÁSICA DE UN PROGRAMA EN ENSAMBLADOR
+; Autores: Alejandro Cabana Suárez y Carlos Isasa Martín
 ;**************************************************************************
 ; DEFINICION DEL SEGMENTO DE DATOS
 DATOS SEGMENT
