@@ -5,8 +5,15 @@
 DATOS SEGMENT
 	MATRIX DB 1,0,0,0,1,1,0,  0,1,0,0,1,0,1,  0,0,1,0,0,1,1,  0,0,0,1,1,1,1 ; Matriz de Generacion
 	DV DB 1,0,1,1
-	VECTOR DB 4 DUP (?)
-
+	
+	STR1 DB "Input: ",34,"X X X X",34,13,10
+	STR2 DB "Output: ",34,"X X X X X X X",34,13,10
+	STR3 DB "Computation:",13,10
+	STR4 DB "     | P1 | P2 | D1 | P4 | D2 | D3 | D4",13,10
+	STR5 DB "WORD | ?  | ?  |  X | ?  |  X |  X |  X",13,10
+	STR6 DB "P1   | X  |    |  X |    |  X |    |  X",13,10
+	STR7 DB "P2   |    | X  |  X |    |    |  X |  X",13,10
+	STR8 DB "P4   |    |    |    | X  |  X |  X |  X",13,10,"$"
 DATOS ENDS
 ;**************************************************************************
 ; DEFINICION DEL SEGMENTO DE PILA
@@ -16,6 +23,7 @@ PILA ENDS
 ;**************************************************************************
 ; DEFINICION DEL SEGMENTO EXTRA
 EXTRA SEGMENT
+	VECTOR DB 4 DUP (?)
 	RESULT DB 7 DUP (?)
 EXTRA ENDS
 ;**************************************************************************
@@ -39,9 +47,9 @@ INICIO PROC
 	MOV DL, DV[1]
 	MOV BH, DV[2]
 	MOV BL, DV[3]
-	; Llama a la subrutina
+	; Llama a las subrutinas
 	CALL MATMULT
-	; Guarda el resultado en memoria
+	CALL PRINT
 
 	; FIN DEL PROGRAMA
 	MOV AX, 4C00H
@@ -72,9 +80,73 @@ MATMULT PROC NEAR
 		AND DL, 1 ; modulo 2
 		MOV RESULT[DI], DL ; guarda el aumulador de esta fila en el resultado
 		CMP DI, 0 ; si no ha recorrido todas las columnas
-		JNZ BUCLE1 ; siguiente iteracion del bucle 
+		JNZ BUCLE1 ; siguiente iteracion del bucle
+
+	; guardo la salida en los registros
+	MOV DX, SEG RESULT
+	MOV AX, OFFSET RESULT
+
 	RET
 MATMULT ENDP
+
+PRINT PROC NEAR
+	MOV BL, VECTOR[0]
+	ADD BL, 30h
+	MOV STR1[8], BL
+	MOV BL, VECTOR[1]
+	ADD BL, 30h
+	MOV STR1[10], BL
+	MOV BL, VECTOR[2]
+	ADD BL, 30h
+	MOV STR1[12], BL
+	MOV BL, VECTOR[3]
+	ADD BL, 30h
+	MOV STR1[14], BL
+
+	MOV BL, RESULT[4]
+	ADD BL, 30h
+	MOV STR2[9], BL
+	MOV STR6[7], BL
+	MOV BL, RESULT[5]
+	ADD BL, 30h
+	MOV STR2[11], BL
+	MOV STR7[12], BL
+	MOV BL, RESULT[0]
+	ADD BL, 30h
+	MOV STR2[13], BL
+	MOV STR5[18], BL
+	MOV STR6[18], BL
+	MOV STR7[18], BL
+	MOV BL, RESULT[6]
+	ADD BL, 30h
+	MOV STR2[15], BL
+	MOV STR8[22], BL
+	MOV BL, RESULT[1]
+	ADD BL, 30h
+	MOV STR2[17], BL
+	MOV STR5[28], BL
+	MOV STR6[28], BL
+	MOV STR8[28], BL
+	MOV BL, RESULT[2]
+	ADD BL, 30h
+	MOV STR2[19], BL
+	MOV STR5[33], BL
+	MOV STR7[33], BL
+	MOV STR8[33], BL
+	MOV BL, RESULT[3]
+	ADD BL, 30h
+	MOV STR2[21], BL
+	MOV STR5[38], BL
+	MOV STR6[38], BL
+	MOV STR7[38], BL
+	MOV STR8[38], BL
+
+	MOV AH, 9
+	MOV DX, OFFSET STR1
+	INT 21h
+
+	RET
+PRINT ENDP
 ; FIN DEL SEGMENTO DE CODIGO
 CODE ENDS
 ; FIN DEL PROGRAMA INDICANDO DONDE COMIENZA LA EJECUCION
