@@ -5,7 +5,7 @@
 DATOS SEGMENT
 	MATRIX DB 1,0,0,0,1,1,0,  0,1,0,0,1,0,1,  0,0,1,0,0,1,1,  0,0,0,1,1,1,1 ; Matriz de Generacion
 	DV DB 1,0,1,1
-	
+
 	STR1 DB "Input: ",34,"X X X X",34,13,10
 	STR2 DB "Output: ",34,"X X X X X X X",34,13,10
 	STR3 DB "Computation:",13,10
@@ -64,23 +64,23 @@ MATMULT PROC NEAR
 	MOV VECTOR[3], BL
 
 	MOV DI, 7 ; inicializo el primer indice a 7. Este recorre las columnas
-	BUCLE1:
+	COLUMNS:
 		DEC DI
 		MOV SI, 4 ; inicializo segundo indice a 4. Recorre filas
 		MOV BX, 28 ; realmente BX siempre es SI * 7, pero seria mas incomodo estarlo multiplicando
 		MOV DX, 0 ; inicializo el acumulador a 0
-		BUCLE2:
+		ROWS:
 			DEC SI ; decremento el indice
 			SUB BX, 7
 			MOV AL, VECTOR[SI] ; guardo en AL el elemento del vector que toca
 			MUL MATRIX[BX][DI] ; lo multiplico por el elemento de la matriz que toca
 			ADD DX, AX ; sumo el resultado en el acumulador
 			CMP SI, 0 ; si no ha recorrido todas las filas de la columna
-			JNZ BUCLE2 ; siguiente iteracion del bucle
+			JNZ ROWS ; siguiente iteracion del bucle
 		AND DL, 1 ; modulo 2
 		MOV RESULT[DI], DL ; guarda el aumulador de esta fila en el resultado
 		CMP DI, 0 ; si no ha recorrido todas las columnas
-		JNZ BUCLE1 ; siguiente iteracion del bucle
+		JNZ COLUMNS ; siguiente iteracion del bucle
 
 	; guardo la salida en los registros
 	MOV DX, SEG RESULT
