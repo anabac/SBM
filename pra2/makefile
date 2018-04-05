@@ -1,4 +1,4 @@
-all: pract2b.exe
+all: pract2b.exe pract2a.exe pract2c.exe
 
 pract2a.exe: pract2a.obj
     tlink /v pract2a.obj
