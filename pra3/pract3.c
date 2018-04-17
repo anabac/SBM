@@ -3,7 +3,7 @@
 
 #define TRUE 1
 #define FALSE 0
-#define NUMEROINTENTOS 5
+#define NUMEROINTENTOS 10
 
 unsigned int comprobarNumeroSecreto(unsigned char* numero);
 void rellenarIntento(unsigned int intento, unsigned char* intentoDigitos);
@@ -41,7 +41,6 @@ int main( void )
 		while ( intento > 9999);
 
 		rellenarIntento( intento, intentoDigitos );
-		printf("%x, %x, %x, %x\n", intentoDigitos[0],intentoDigitos[1],intentoDigitos[2],intentoDigitos[3]);
 		aciertos = calcularAciertos(numSecreto, intentoDigitos);
 		semiaciertos = calcularSemiaciertos(numSecreto, intentoDigitos);
 		printf("Numero de Aciertos: %u\t", aciertos);
