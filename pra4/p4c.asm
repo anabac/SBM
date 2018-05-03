@@ -76,14 +76,14 @@ INICIO PROC
 	jne comprobar_dec
 	cmp cadena[5], "e"
 	jne comprobar_dec
-	mov cesarflag, 0
+	mov cesarflag, 0 ; el flag a 0 indica que queremos cifrar
 	mov dx, offset saltolinea
 	mov ah, 9h
 	int 21h
 	mov dx, offset str1
 	mov ah, 9h
 	int 21h
-	jmp mainbucle
+	jmp mainbucle ; volvemos a pedir por pantalla
 	
 	;Comprobamos si nos pide decodificar
 	comprobar_dec:
@@ -104,11 +104,11 @@ INICIO PROC
 	mov dx, offset saltolinea
 	mov ah, 9h
 	int 21h
-	mov cesarflag, 1
+	mov cesarflag, 1 ; el flag a 1 indica que queremos descifrar
 	mov dx, offset str2
 	mov ah, 9h
 	int 21h
-	jmp mainbucle
+	jmp mainbucle ; volvemos a pedir por pantalla
 	
 	;Comprobamos si nos pide cerrar
 	comprobar_fin:
@@ -146,14 +146,14 @@ INICIO PROC
 	mov dx, offset saltolinea
 	mov ah, 9h
 	int 21h
-	jmp mainbucle
+	jmp mainbucle ; volvemos a pedir por pantalla
 	;Desciframos
 	fundecode:
 	call rutina_descifrar
 	mov dx, offset saltolinea
 	mov ah, 9h
 	int 21h
-	jmp mainbucle
+	jmp mainbucle ; volvemos a pedir por pantalla
 	
 	;Para acabar desinstalamos
 	finalmain:
@@ -199,7 +199,7 @@ rutina_rtc proc far
 	;Comprobar que es interrupcion periodica
 	test al, 01000000b
 	jz final
-	;Como el reloj esta configurado a 2Hz usamos un flag intermedio
+	;Como el reloj esta configurado a 2Hz y queremos 1Hz usamos un flag intermedio
 	cmp flagint, 0
 	jne flagtotal
 	mov flagint, 1
@@ -247,7 +247,7 @@ bucle:
 	cmp flag, 1
 	jne waitloop
 	mov flag, 0
-	;Comprobar si es fin
+	;Comprobar si es fin de cadena
 	mov bl, [si]
 	cmp bl, "$"
 	je fin
@@ -286,7 +286,8 @@ bucle2:
 	waitloop2:
 	cmp flag, 1
 	jne waitloop2
-	;Comprobar si es fin
+	mov flag,0
+	;Comprobar si es fin de cadena
 	mov bl, [si]
 	cmp bl, '$'
 	je fin2
@@ -309,7 +310,6 @@ bucle2:
 	int 21h
 	pop dx
 	inc si
-	mov flag,0
 	jmp bucle2
 
 fin2:
