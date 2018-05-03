@@ -13,6 +13,7 @@ DATOS SEGMENT
 	str2 db "Modo descifrar",13,10,"$"
 	str3 db "Cerrando...$"
 	str4 db "Resultado: $"
+
 DATOS ENDS
 ;**************************************************************************
 ; DEFINICION DEL SEGMENTO DE PILA
@@ -47,9 +48,9 @@ INICIO PROC
 	mov es,ax
 	cli
 	;Guardar vectores de interrupción inciales
-	mov ax,es:[60h*4]
+	mov ax,es:[70h*4]
 	mov old_70h,ax
-	mov ax,es:[60h*4+2]
+	mov ax,es:[70h*4+2]
 	mov old_70h+2,ax
 	;Instalar los nuevos vectores de interrupción
 	mov es:[70h*4],offset rutina_rtc
@@ -220,7 +221,7 @@ confRTC PROC NEAR
 	mov al, 0Ah
 	; FIJAR LA FRECUENCIA
 	out 70h, al ; Accede a registro 0Ah
-	mov al, 00100111b ; DV=010b, RS=1110b (7 == 2 Hz)
+	mov al, 00101111b ; DV=010b, RS=1110b (15 == 2 Hz)
 	out 71h, al ; Escribe registro 0Ah
 	; ACTIVAR INTERRUPCIONES
 	mov al, 0Bh
@@ -245,6 +246,7 @@ bucle:
 	waitloop:
 	cmp flag, 1
 	jne waitloop
+	mov flag, 0
 	;Comprobar si es fin
 	mov bl, [si]
 	cmp bl, "$"
@@ -268,7 +270,6 @@ bucle:
 	int 21h
 	pop dx
 	inc si
-	mov flag, 0
 	jmp bucle
 
 fin:
